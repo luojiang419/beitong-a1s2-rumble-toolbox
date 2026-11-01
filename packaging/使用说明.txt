@@ -1,0 +1,15 @@
+北通 BTP-A1S2 震动工具箱（社区版）
+
+1. 完整解压 ZIP，双击 BeitongRumbleToolbox.exe。
+2. 仅连接待测手柄，在打开的页面查看连接状态。
+3. 对 LOGO/TURBO/SHIFT 与四个编号灯布局的 BTP-A1S2 有线版：
+   保持 USB 连接，长按 LOGO，灯停止闪烁时松开；循环至 1 号灯常亮。
+4. 先测试左右马达，再试驾赛车：左摇杆转向、RT 油门、LT 刹车、X 手刹。
+5. 退出时点击启动器“停止震动并退出工具”。
+
+Windows 10/11 x64；无需 Python、Steam、管理员权限。
+本工具是社区诊断/验证工具，不是官方驱动，不刷固件，不修改 Steam。
+不支持自动切换硬件模式，也不承诺所有批次/游戏均具有相同效果。
+首版未代码签名，请以 GitHub Release 附带 SHA-256 核对文件。
+
+源码与说明：https://github.com/luojiang419/beitong-a1s2-rumble-toolbox

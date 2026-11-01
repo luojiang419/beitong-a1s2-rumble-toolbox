@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+.env
+*.log
+*.pid
+research/*
+!research/北通官方资料核查.md
+screenshots/
+local-settings.json
+.cache/
+build/
+dist/
+vendor/
+.publish/
+*.spec

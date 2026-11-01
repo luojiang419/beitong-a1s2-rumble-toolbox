@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a111b"><title>午夜试车场 · 手柄反馈实验室</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="午夜试车场首页"><span class="brand-mark">M<span>↗</span></span><span>午夜试车场<small>MIDNIGHT / TEST CIRCUIT</small></span></a>
+      <div class="session"><span class="live-dot"></span>本地驾驶实验室 <span class="version">01 / NIGHT RUN</span></div>
+    </header>
+    <main>
+      <section class="intro"><div><p class="eyebrow">DRIVE. FEEL. VERIFY.</p><h1>把每一次反馈，<span>开出来。</span></h1><p class="lede">跑过弯道、砂石与障碍，验证你的手柄是否收到了真正的游戏震动。</p></div><div class="intro-note"><span class="note-number">3</span><span>种反馈场景<small>碰撞 / 路感 / 打滑</small></span></div></section>
+      <div class="dashboard">
+        <section class="game-panel">
+          <div class="panel-heading"><div><span class="live-dot"></span><strong>滨海测试环线</strong><span class="subtle">CIRCUIT 01</span></div><div id="runStatus" class="run-status">等待发车</div></div>
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="track" aria-label="可操作的俯视赛车测试赛道"></canvas>
+            <div class="hud-top"><div class="lap-indicator"><span>LAP</span><strong id="lap">01 <i>/ 自由试驾</i></strong></div><div class="lap-clock"><span>本圈用时</span><strong id="lapTime">00:00.00</strong><small id="bestLap">最佳 --:--.--</small></div></div>
+            <div id="startOverlay" class="start-overlay"><div class="start-box"><span class="overlay-icon">↗</span><p class="eyebrow">THE TRACK IS YOURS</p><h2 id="overlayTitle">准备好，出发。</h2><p id="overlayCopy">先按一下手柄按钮，再用右侧「绑定」设置油门。<br>也可直接使用键盘体验。</p><button id="overlayStart" class="primary-button">开始试驾 <span>→</span></button><small>W / ↑ 油门 · A D / ← → 转向 · S / ↓ 刹车</small></div></div>
+            <div class="hud-bottom"><div class="speed-meter"><strong id="speed">0</strong><span>KM/H<small id="surface">沥青</small></span><div id="speedBars" class="speed-bars"></div></div><div id="eventToast" class="event-toast" aria-live="polite">沿箭头方向完成一圈，经过全部检查点</div></div>
+            <div class="legend"><span><i class="legend-road"></i>沥青</span><span><i class="legend-gravel"></i>砂石</span><span><i class="legend-object"></i>缓冲障碍</span></div>
+          </div>
+          <div class="drive-toolbar"><div class="drive-actions"><button id="startPause" class="primary-button small">开始试驾 <span>▶</span></button><button id="reset" class="secondary-button" title="回到起点">↺ 复位</button></div><div class="options"><label><input id="feedbackEnabled" type="checkbox" checked> 游戏震动</label><label><input id="soundEnabled" type="checkbox"> 合成音效</label></div></div>
+          <div class="scene-grid"><button class="scene-card" data-scene="collision"><span class="scene-icon orange">✦</span><span><strong>碰撞反馈</strong><small>撞击橙色障碍，感受短促冲击</small></span><span class="scene-key">01</span></button><button class="scene-card" data-scene="gravel"><span class="scene-icon teal">≋</span><span><strong>砂石路感</strong><small>驶入路肩，感受连续颗粒反馈</small></span><span class="scene-key">02</span></button><button class="scene-card" data-scene="skid"><span class="scene-icon purple">⌁</span><span><strong>甩尾打滑</strong><small>加速转向 + 空格 / 手刹</small></span><span class="scene-key">03</span></button></div>
+          <p class="scene-hint">点击场景卡片可查看操作提示；真实游戏事件会自动触发对应反馈。</p>
+        </section>
+        <aside class="sidebar">
+          <section class="card controller-card"><div class="card-heading"><h2>手柄连接</h2><span id="connectionBadge" class="badge muted">检测中</span></div><div class="controller-illustration" aria-hidden="true"><span class="controller-shell"><i class="dpad">✚</i><i class="stick left"></i><i class="stick right"></i><i class="face-buttons">●<b>● ●</b>●</i><i class="controller-light"></i></span></div><h3 id="deviceName">正在读取本机手柄</h3><p id="deviceDetail" class="device-detail">USB / 原生输入桥接</p><div id="rumbleNotice" class="rumble-notice">正在检查震动能力…</div><div class="input-label"><span>转向输入</span><strong id="steerValue">0.00</strong></div><div class="axis-meter"><span id="axisFill"></span><i></i></div><div class="input-grid"><div><span>油门</span><strong id="throttleValue">0%</strong><i><b id="throttleFill"></b></i></div><div><span>刹车</span><strong id="brakeValue">0%</strong><i><b id="brakeFill"></b></i></div></div><div id="pressedButtons" class="pressed-buttons">按钮：等待输入</div></section>
+          <section class="card"><div class="card-heading"><h2>马达直测</h2><span class="subtle">200 ms</span></div><p class="card-copy">独立测试输出。返回成功后，仍需用手确认是否震动。</p><div class="motor-buttons"><button data-motor="left">左马达</button><button data-motor="right">右马达</button><button data-motor="both">双马达</button></div><button id="stopRumble" class="stop-button">■ 停止震动</button><p id="motorResult" class="motor-result" aria-live="polite">等待测试</p></section>
+          <section class="card"><div class="card-heading"><h2>北通有线版模式检查</h2><span class="subtle">BTP-A1S2</span></div><p id="modeStatus" class="card-copy">正在检查 PC360 接口…</p><p class="card-copy">适用于已核对的 LOGO / TURBO / SHIFT 与四个编号灯外观：保持 USB 连接，长按 LOGO，灯停止闪烁时迅速松开；循环至 1 号灯单独常亮（PC360）。</p><p class="card-copy">切换后自动重新检测。如按键布局改变，可重新绑定油门与刹车。</p><a class="text-button" href="https://www.yuque.com/fujuan-us0ly/zqoosl/rx7o7tilbts95k73" target="_blank" rel="noopener noreferrer">查看北通官方连接教程 ↗</a></section>
+          <section class="card mapping-card"><div class="card-heading"><h2>驾驶映射</h2><button id="mappingReset" class="text-button">恢复默认</button></div><p class="card-copy">通用手柄按键编号可能不同，请按实际按钮绑定。</p><label class="invert"><input id="analogTriggers" type="checkbox" checked>PC360：同时使用 RT 油门 / LT 刹车</label><div class="mapping-row"><label for="steeringAxis">转向轴</label><select id="steeringAxis"><option value="0">轴 0</option></select><label class="invert"><input id="invertSteering" type="checkbox">反向</label></div><div class="mapping-row"><span>油门</span><span id="throttleMapping" class="binding-name">按钮 0</span><button data-bind="throttle">绑定</button></div><div class="mapping-row"><span>刹车 / 倒车</span><span id="brakeMapping" class="binding-name">按钮 1</span><button data-bind="brake">绑定</button></div><div class="mapping-row"><span>手刹</span><span id="handbrakeMapping" class="binding-name">按钮 2</span><button data-bind="handbrake">绑定</button></div><p id="bindingHint" class="binding-hint">键盘始终可用 · 空格手刹 · Esc 暂停</p></section>
+          <section class="card event-card"><div class="card-heading"><h2>反馈记录</h2><span id="eventCount" class="subtle">0 次事件</span></div><div id="eventLog" class="event-log" aria-live="polite"><p class="empty-log">驾驶开始后，这里显示反馈事件与马达请求结果。</p></div></section>
+        </aside>
+      </div>
+    </main>
+    <footer><span>LOCAL FIRST · 不修改 Steam 设置</span><span>画面与合成音效可正常运行；物理震动取决于手柄模式与驱动支持。</span><span id="bridgeStatus">连接本机输入服务…</span></footer>
+  </div>
+  <script type="module" src="/game.js"></script>
+</body></html>

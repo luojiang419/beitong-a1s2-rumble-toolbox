@@ -1,0 +1,74 @@
+name: Build and release Windows toolbox
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: beitong-a1s2-windows-release
+  cancel-in-progress: false
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      skip: ${{ steps.version.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/release.py resolve --repo "$GITHUB_REPOSITORY" --sha "$GITHUB_SHA"
+  build:
+    needs: plan
+    if: needs.plan.outputs.skip != 'true'
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install -r requirements-build.txt
+      - name: Run backend and release-contract tests
+        run: python -m unittest discover -s tests -v
+      - name: Run racing and input tests
+        run: node --test web/physics.test.js web/input.test.js
+      - name: Build portable package
+        run: python scripts/build_windows.py --version ${{ needs.plan.outputs.version }}
+      - name: Verify actual portable executable (without physical USB hardware)
+        run: python scripts/verify_release.py --version ${{ needs.plan.outputs.version }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-release
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 7
+  publish:
+    needs: [plan, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-release
+          path: dist
+      - name: Upload draft, verify hashes and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/release.py publish --repo "$GITHUB_REPOSITORY" --sha "$GITHUB_SHA" --version ${{ needs.plan.outputs.version }}
