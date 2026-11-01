@@ -52,6 +52,7 @@ def main():
         report = json.loads(report_path.read_text(encoding="utf-8"))
         assert report["ok"] and report["version"] == args.version and report["runtime"]["bundled"]
         assert report["resources"] == "complete"
+        assert report["gui_runtime"] == "initialized", "图形运行时未通过自检"
         with socket.socket() as reservation:
             reservation.bind(("127.0.0.1", 0))
             port = reservation.getsockname()[1]

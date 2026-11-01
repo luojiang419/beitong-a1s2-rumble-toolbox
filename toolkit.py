@@ -24,6 +24,14 @@ def self_test(rumble=False):
     missing = [name for name in required if not (root / name).is_file()]
     if missing:
         raise RuntimeError("发行包资源不完整：" + ", ".join(missing))
+    # 检查打包后的 Tcl/Tk 真正能初始化；不打开浏览器，也不代表视觉验收。
+    import tkinter as tk
+    window = tk.Tk()
+    try:
+        window.withdraw()
+        window.update_idletasks()
+    finally:
+        window.destroy()
     driver = NativeSDL()
     devices = []
     try:
@@ -47,7 +55,7 @@ def self_test(rumble=False):
     return {"ok": True, "application": APPLICATION_ID, "version": version(),
             "runtime": {"name": runtime.name, "sha256": hashlib.sha256(runtime.read_bytes()).hexdigest(),
                         "bundled": runtime.is_relative_to(root)},
-            "resources": "complete", "devices": devices, "xinput_slots": slots,
+            "resources": "complete", "gui_runtime": "initialized", "devices": devices, "xinput_slots": slots,
             "note": "未接入硬件时只验证启动和资源；震感需人工确认。"}
 
 
